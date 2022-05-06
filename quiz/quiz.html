@@ -1,0 +1,202 @@
+<html>
+  <head>
+    <title>Quiz</title>
+
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"
+    />
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  </head>
+
+  <body style="margin: 20px">
+    <center>
+      <h1>CS Quiz</h1>
+      <form onsubmit="return false;">
+        <h3 id="qn" style="margin-left: 20px"></h3>
+        <label id="aa" value="" style="margin: 10px"> </label>
+        <input
+          type="radio"
+          name="a"
+          id="a"
+          value=""
+          onclick="Select();"
+          style="margin: 10px; text-align: left"
+        />
+        <br /><br />
+        <label id="bb" value="" style="margin: 10px"> </label>
+        <input
+          type="radio"
+          name="a"
+          id="b"
+          value=""
+          onclick="Select();"
+          style="margin: 10px"
+        />
+        <br /><br />
+        <label id="cc" value="" style="margin: 10px"></label>
+        <input
+          type="radio"
+          name="a"
+          id="c"
+          value=""
+          onclick="Select();"
+          style="margin: 10px"
+        />
+        <br /><br />
+        <label id="dd" value="" style="margin: 10px"></label>
+        <input
+          type="radio"
+          name="a"
+          id="d"
+          value=""
+          onclick="Select();"
+          style="margin: 10px"
+        />
+        <br /><br />
+        <br /><br /><br />
+        <input
+          type="button"
+          class="btn btn-primary"
+          onclick="gotoback();"
+          value="Back"
+        />
+        <input
+          type="button"
+          class="btn btn-primary"
+          name="submit"
+          value="Finish "
+          onclick="Submit();"
+        />
+        <input
+          type="button"
+          class="btn btn-primary"
+          onclick="gotonext();"
+          value="Next"
+        />
+      </form>
+      <div id="result" style="font-size: 20px; color: red"></div>
+    </center>
+  </body>
+
+  <script>
+    var count = 0;
+    var max_count = 0,
+      solnArray,
+      selected,
+      curr_count = 0;
+    document.getElementById("qn").innerHTML =
+      "Q" + (count + 1).toString() + " ";
+    jQuery.ajax({
+      url: "quiz.php",
+      type: "post",
+      data: "num=" + count,
+      success: function (result) {
+        var q = result.split("@");
+        document.getElementById("qn").innerHTML =
+          document.getElementById("qn").innerHTML + q[0];
+        document.getElementById("aa").innerHTML = q[1];
+        document.getElementById("bb").innerHTML = q[2];
+        document.getElementById("cc").innerHTML = q[3];
+        document.getElementById("dd").innerHTML = q[4];
+        max_count = q[5];
+
+        solnArray = new Array(max_count);
+        selected = new Array(max_count);
+        for (var i = 0; i < max_count; i++) {
+          solnArray[i] = 0;
+          selected[i] = "";
+        }
+      },
+    });
+
+    function gotonext() {
+      if (count < max_count - 1) count = count + 1;
+      var num = jQuery("#num").val();
+      document.getElementById("a").checked = false;
+      document.getElementById("b").checked = false;
+      document.getElementById("c").checked = false;
+      document.getElementById("d").checked = false;
+      if (selected[count].length == 1)
+        document.getElementById(selected[count]).checked = true;
+
+      curr_count = count;
+      document.getElementById("qn").innerHTML =
+        "Q" + (count + 1).toString() + " ";
+      jQuery.ajax({
+        url: "quiz.php",
+        type: "post",
+        data: "num=" + count,
+        success: function (result) {
+          var q = result.split("@");
+          document.getElementById("qn").innerHTML =
+            document.getElementById("qn").innerHTML + q[0];
+          document.getElementById("aa").innerHTML = q[1];
+          document.getElementById("bb").innerHTML = q[2];
+          document.getElementById("cc").innerHTML = q[3];
+          document.getElementById("dd").innerHTML = q[4];
+        },
+      });
+    }
+
+    function gotoback() {
+      var num = jQuery("#num").val();
+      if (count > 0) count = count - 1;
+      document.getElementById("a").checked = false;
+      document.getElementById("b").checked = false;
+      document.getElementById("c").checked = false;
+      document.getElementById("d").checked = false;
+      if (selected[count].length == 1)
+        document.getElementById(selected[count]).checked = true;
+      curr_count = count;
+      document.getElementById("qn").innerHTML =
+        "Q" + (count + 1).toString() + " ";
+      jQuery.ajax({
+        url: "quiz.php",
+        type: "post",
+        data: "num=" + count,
+        success: function (result) {
+          var q = result.split("@");
+          document.getElementById("qn").innerHTML =
+            document.getElementById("qn").innerHTML + q[0];
+          document.getElementById("aa").innerHTML = q[1];
+          document.getElementById("bb").innerHTML = q[2];
+          document.getElementById("cc").innerHTML = q[3];
+          document.getElementById("dd").innerHTML = q[4];
+        },
+      });
+    }
+
+    function radio() {
+      if (document.getElementById("a").checked == true) return "aa";
+      if (document.getElementById("b").checked == true) return "bb";
+      if (document.getElementById("c").checked == true) return "cc";
+      if (document.getElementById("d").checked == true) return "dd";
+      else return "FF";
+    }
+
+    function Select() {
+      selected[curr_count] = radio()[0];
+    }
+    function Submit() {
+      var num = jQuery("#num").val();
+      for (var i = 0; i < selected.length; i++) {
+        selected[i] = selected[i].toString();
+        if (selected[i].localeCompare("a") == 0) selected[i] = 1;
+        else if (selected[i].localeCompare("b") == 0) selected[i] = 2;
+        else if (selected[i].localeCompare("c") == 0) selected[i] = 3;
+        else if (selected[i].localeCompare("d") == 0) selected[i] = 4;
+        else selected[i] = 5;
+      }
+      jQuery.ajax({
+        url: "answers.php",
+        type: "post",
+        data: "num=" + selected,
+        success: function (result) {
+          document.getElementById("result").innerHTML = result;
+        },
+      });
+    }
+  </script>
+</html>
