@@ -1,0 +1,39 @@
+body{
+    background-color: whitesmoke;
+}
+.index-card{
+    width:20rem;;
+    margin-left:350px;
+    margin-top:50px;
+    height:20rem;
+    border:2px solid black;
+    box-shadow: 10px;
+}
+.question-card{
+    width:40rem;
+    margin-left:50px;
+    margin-top:50px;
+    height:auto;
+    border-radius: 8px;
+    background-color: rgba(255,215,0,1);
+    border:2px solid ghostwhite;
+    box-shadow: 10px;
+}
+.img1{
+    height:auto;
+}
+.option{
+    width:40rem;
+    height:40px;
+    margin-left:50px;
+    background-color: rgba(169,169,169,0.9);
+    border: 2px solid white;
+    border-radius: 4px;
+    margin-top:0.8rem;
+}
+.option:hover{
+    border: 4px solid blue;   
+}
+.option:focus{
+    border: 4px solid blue;   
+}

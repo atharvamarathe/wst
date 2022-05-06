@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script>
+      var name, age;
+      function setName(str) {
+        name = str;
+      }
+      function setAge(str) {
+        age = str;
+      }
+      function send() {
+        xmlhttp = new XMLHttpRequest();
+        xmlhttp.onreadystatechange = function () {
+          if (this.readyState == 4 && this.status == 200) {
+            console.log("here");
+            document.write(this.responseText);
+            document.write("Got Response!");
+          }
+        };
+        xmlhttp.open("GET", `server.php?name=${name}&age=${age}`, true);
+        xmlhttp.send();
+      }
+
+      function getresults() {
+        xmlhttp = new XMLHttpRequest();
+        xmlhttp.onreadystatechange = function () {
+          if (this.readyState == 4 && this.status == 200) {
+            document.getElementById("result").innerHTML = this.responseText;
+            document.getElementById("result").style.color = "red";
+          }
+        };
+        xmlhttp.open("GET", "server.php", true);
+        xmlhttp.send();
+      }
+    </script>
+  </head>
+  <body>
+    <h1>Hello!</h1>
+    <form>
+      <input type="text" name="name" id="name" onchange="setName(this.value)" />
+      <input type="text" name="age" id="age" onchange="setAge(this.value)" />
+      <input type="submit" name="submit" onclick="send()" />
+    </form>
+    <h1>Know the results</h1>
+    <button onclick="getresults()">Click Here!</button>
+    <div id="table">
+      <table id="result"></table>
+    </div>
+  </body>
+</html>
+
+<!-- 
+var xhttp = new XMLHttpRequest();
+xhttp.open("POST", "ajaxfile.php", true); 
+xhttp.setRequestHeader("Content-Type", "application/json");
+xhttp.onreadystatechange = function() {
+   if (this.readyState == 4 && this.status == 200) {
+     // Response
+     var response = this.responseText;
+   }
+};
+var data = {name:'yogesh',salary: 35000,email: 'yogesh@makitweb.com'};
+xhttp.send(JSON.stringify(data)); -->
+
+<!-- 
+
+<?php
+$xmlDoc = new DOMDocument();
+$xmlDoc->load("note.xml");
+
+$x = $xmlDoc->documentElement;
+foreach ($x->childNodes AS $item) {
+  print $item->nodeName . " = " . $item->nodeValue . "<br>";
+}
+?>  -->
+<!-- 
+<?php
+ 
+$people_json = file_get_contents('people.json');
+ 
+$decoded_json = json_decode($people_json, false);
+ 
+echo $decoded_json->name;
+// Monty
+ 
+echo $decoded_json->email;
+// monty@something.com
+ 
+echo $decoded_json->age;
+// 77
+ 
+?> -->
+<!--  -->
+<!-- $data = json_decode(file_get_contents('php://input'), true); -->
